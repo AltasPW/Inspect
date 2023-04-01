@@ -2,13 +2,15 @@
 This is basically a type of inspect for you computer nerds if yours is blocked.
 
 # How to use
+Copy and create a bookmark and set this as your URL.
 
-
+github
 ```js
-fetch("https://raw.githubusercontent.com/AltasPW/Inspect/main/main.js").then(r=>r.text()).then(r=>eval(r))
+javascript:fetch("https://raw.githubusercontent.com/AltasPW/Inspect/main/main.js").then(r=>r.text()).then(r=>eval(r))
 ```
-
+Replit, if github is blocked
 ```js
+javascript:fetch("https://inspect.hgocrazy.repl.co/").then(r=>r.text()).then(r=>eval(r))
 ```
 
 
