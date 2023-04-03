@@ -12,7 +12,6 @@ popup.style.backgroundColor = 'white';
 popup.style.border = '1px solid black';
 popup.style.zIndex = '9999';
 document.body.appendChild(popup);
-
 // create input fields for editing element info
 const tagNameInput = document.createElement('input');
 tagNameInput.type = 'text';
@@ -59,7 +58,7 @@ function updateElementInfo() {
 function handleElementClick(event) {
     // get the element that was clicked
     const element = event.target;
-    if (element.id === '-_element' || element.id === "dontGet" || element.id === "popup") {
+    if (element.id === '-_element' || element.id === "dontGet" || element.id === "popup" || element.id === "_null") {
         return;
     }
     // remove highlight from previously selected element, if any
@@ -73,19 +72,157 @@ function handleElementClick(event) {
     // update the selected element variable
     selectedElement = element;
     // update the popup with information about the element
+    popup.style.background = "transparent"
+    popup.id = "dontGet"
     popup.innerHTML = `
-    <style>
-        #dontGet{
-            color:black;
-        }
-    </style> 
-    <p id="dontGet"><strong id="dontGet">Tag name:</strong> <input id="-_element" type="text" value="${element.tagName}" onchange="updateElementInfo()" /></p>
-    <p id="dontGet"><strong id="dontGet">ID:</strong> <input id="-_element" type="text" value="${element.id}" onchange="updateElementInfo()" /></p>
-    <p id="dontGet"><strong id="dontGet">Classes:</strong> <input id="-_element" type="text" value="${Array.from(element.classList).join(' ')}" onchange="updateElementInfo()" /></p>
-    <p id="dontGet"><strong id="dontGet">Inner HTML:</strong></p>
-    <textarea id="-_element" onchange="updateElementInfo()">${element.innerHTML}</textarea>
+<style>
+  *:focus {
+    outline: none;
+  }
+  #dontGet {
+    color: #FFF;
+    font-family: Arial, sans-serif;
+    font-size: 1.2rem;
+    margin: 2rem auto;
+    padding: 1rem;
+    text-align: center;
+    text-transform: uppercase;
+    background-color: #333;
+    border-radius: 0.5rem;
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    z-index: 999;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    max-width: 500px;
+    overflow: hidden;
+  }
+
+  #dontGet.closed {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #dontGet hr {
+    border-color: #FFF;
+    margin: 0;
+    width: 100%;
+  }
+
+  #dontGet p {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #dontGet label {
+    font-weight: bold;
+    margin-right: 1rem;
+    text-transform: uppercase;
+    width: 7rem;
+  }
+
+  #dontGet input,
+  #dontGet textarea {
+    background-color: #f5f5f5;
+    border: none;
+    text-decoration:none;
+    border-radius: 0.3rem;
+    box-sizing: border-box;
+    color: #333;
+    font-size: 1rem;
+    margin-left: 1rem;
+    padding: 0.5rem;
+    width: 60%;
+    transition:0.3s;
+  }
+  #dontGet input:hover,
+  #dontGet textarea:hover {
+    background-color: #7a7a7a;
+    border: none;
+    text-decoration:none;
+    border-radius: 0.3rem;
+    box-sizing: border-box;
+    color: #333;
+    font-size: 1rem;
+    margin-left: 1rem;
+    padding: 0.5rem;
+    width: 60%;
+  }
+
+  #dontGet input:focus,
+  #dontGet textarea:focus {
+    background-color: white;
+    border: none;
+    text-decoration:none;
+    border-radius: 0.3rem;
+    box-sizing: border-box;
+    color: black;
+    font-size: 1rem;
+    margin-left: 1rem;
+    padding: 0.5rem;
+    width: 60%;
+  }
+
+  #dontGet textarea {
+    height: 6rem;
+    resize: none;
+  }
+  
+  .toggle-panel {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #FFF;
+    border: 1px solid #333;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+  }
+</style>
+
+<div id="dontGet">
+  <h1>Inspect Panel</h1>
+  <hr>
+  <form>
+    <p>
+      <label for="-_element">Tag name:</label>
+      <input id="-_element" type="text" value="${element.tagName}" onchange="updateElementInfo()" />
+    </p>
+    <p>
+      <label for="-_element">ID:</label>
+      <input id="-_element" type="text" value="${element.id}" onchange="updateElementInfo()" />
+    </p>
+    <p>
+      <label for="-_element">Classes:</label>
+      <input id="-_element" type="text" value="${Array.from(element.classList).join(' ')}" onchange="updateElementInfo()" />
+    </p>
+    <p>
+      <label for="-_element">Inner HTML:</label>
+      <textarea id="-_element" onchange="updateElementInfo()">${element.innerHTML}</textarea>
+    </p>
+      <input id="-_element" type="button" onclick="updateElementInfo()" value="change"></input>
+  </form>
+</div>
+<button id="_null" onclick="toggle(this)" class="toggle-panel">-</button>
   `;
     popup.style.display = 'block';
+    makePanel(document.getElementById("dontGet").children[1]);
+}
+
+function toggle(e) {
+    if (document.getElementById("dontGet").children[1].style.display === "block") {
+        document.getElementById("dontGet").children[1].style.display = "none"
+        e.innerHTML = "+"
+    } else {
+        document.getElementById("dontGet").children[1].style.display = "block"
+        e.innerHTML = "-"
+    }
 }
 
 function handleMouseLeave(event) {
@@ -134,9 +271,6 @@ innerHTMLInput.placeholder = 'Inner HTML';
 innerHTMLInput.addEventListener('mousedown', (event) => {
     event.preventDefault();
 });
-innerHTMLInput.addEventListener('change', () => {
-    updateElementInfo();
-});
 popup.appendChild(innerHTMLInput);
 
 function makePanel(element) {
@@ -173,7 +307,3 @@ function makePanel(element) {
         }
     }
 }
-
-
-
-makePanel(popup);
